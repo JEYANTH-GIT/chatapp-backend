@@ -1,35 +1,15 @@
 package com.example.chatApp.config;
 
-import com.example.chatApp.auth.security.JwtUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.server.ServerHttpRequest;
-import org.springframework.http.server.ServerHttpResponse;
-import org.springframework.messaging.Message;
-import org.springframework.messaging.MessageChannel;
-import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
-import org.springframework.messaging.simp.stomp.StompCommand;
-import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
-import org.springframework.messaging.support.ChannelInterceptor;
-import org.springframework.messaging.support.MessageHeaderAccessor;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
-import org.springframework.web.socket.server.HandshakeInterceptor;
-
-import java.util.Map;
 
 /**
- * WebSocket STOMP configuration.
- * Owner: Mahalakshmi (Module 2 — 1-to-1 Chat)
- *
- * Integration contract with Karthik (Module 1):
- *   JWT token is passed as query param: ws://host/ws?token=<JWT>
- *   JwtUtil is owned by Karthik — com.example.chatApp.auth.security.JwtUtil
+ * WebSocket configuration — owned by Maha (Module 2: Chat).
+ * This is a stub required for NotificationService's SimpMessagingTemplate to work.
+ * Maha will complete this with JWT handshake interceptor.
  */
 @Configuration
 @EnableWebSocketMessageBroker
