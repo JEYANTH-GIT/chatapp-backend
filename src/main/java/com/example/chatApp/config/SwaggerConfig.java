@@ -13,24 +13,25 @@ import org.springframework.context.annotation.Configuration;
 public class SwaggerConfig {
 
     @Bean
-    public OpenAPI liveChapOpenAPI() {
-        final String securitySchemeName = "bearerAuth";
+    public OpenAPI customOpenAPI() {
         return new OpenAPI()
                 .info(new Info()
                         .title("LiveChat API")
-                        .description("Real-time chat application API with 1-to-1 messaging, group chats, file/media sharing, emoji reactions, and notifications.")
                         .version("1.0.0")
+                        .description("Real-time chat application API with JWT authentication, OTP verification, Google OAuth2, and WebSocket messaging.")
                         .contact(new Contact()
                                 .name("LiveChat Team")
-                                .email("team@livechat.com")))
-                .addSecurityItem(new SecurityRequirement().addList(securitySchemeName))
+                                .email("team@livechat.com"))
+                )
+                .addSecurityItem(new SecurityRequirement().addList("Bearer Authentication"))
                 .components(new Components()
-                        .addSecuritySchemes(securitySchemeName,
+                        .addSecuritySchemes("Bearer Authentication",
                                 new SecurityScheme()
-                                        .name(securitySchemeName)
                                         .type(SecurityScheme.Type.HTTP)
-                                        .scheme("bearer")
                                         .bearerFormat("JWT")
-                                        .description("Enter JWT token")));
+                                        .scheme("bearer")
+                                        .description("Enter your JWT token")
+                        )
+                );
     }
 }
