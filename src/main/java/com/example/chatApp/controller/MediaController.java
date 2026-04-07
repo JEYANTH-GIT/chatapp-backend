@@ -1,8 +1,9 @@
-package com.example.chatApp.media.controller;
+package com.example.chatApp.controller;
 
-import com.example.chatApp.auth.model.User;
-import com.example.chatApp.media.dto.MediaUploadResponse;
-import com.example.chatApp.media.service.MediaService;
+import com.example.chatApp.model.User;
+import com.example.chatApp.dto.MediaUploadResponse;
+import com.example.chatApp.service.MediaService;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;

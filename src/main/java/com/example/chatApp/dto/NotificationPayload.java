@@ -1,12 +1,13 @@
-package com.example.chatApp.media.dto;
+package com.example.chatApp.dto;
 
-import com.example.chatApp.media.model.Notification.NotificationType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+
+import com.example.chatApp.model.Notification.NotificationType;
 
 @Data
 @Builder

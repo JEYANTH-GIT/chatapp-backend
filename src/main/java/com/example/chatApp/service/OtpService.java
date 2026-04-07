@@ -1,8 +1,9 @@
 package com.example.chatApp.service;
 
-import com.example.chatApp.entity.OtpVerification;
-import com.example.chatApp.entity.User;
+
 import com.example.chatApp.enums.OtpPurpose;
+import com.example.chatApp.model.OtpVerification;
+import com.example.chatApp.model.User;
 import com.example.chatApp.repository.OtpVerificationRepository;
 import com.example.chatApp.repository.UserRepository;
 import org.slf4j.Logger;

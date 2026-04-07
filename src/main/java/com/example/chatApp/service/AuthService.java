@@ -1,11 +1,13 @@
 package com.example.chatApp.service;
 
 import com.example.chatApp.dto.*;
-import com.example.chatApp.entity.User;
+
 import com.example.chatApp.enums.AuthProvider;
 import com.example.chatApp.enums.OtpPurpose;
 import com.example.chatApp.repository.UserRepository;
 import com.example.chatApp.security.JwtUtil;
+
+import org.apache.catalina.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;

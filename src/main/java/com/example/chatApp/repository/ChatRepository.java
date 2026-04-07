@@ -1,6 +1,6 @@
 package com.example.chatApp.repository;
 
-import com.example.chatApp.auth.model.User;
+import com.example.chatApp.model.User;
 import com.example.chatApp.model.Chat;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

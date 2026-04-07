@@ -1,7 +1,7 @@
 package com.example.chatApp.service;
 
-import com.example.chatApp.auth.model.User;
-import com.example.chatApp.auth.repository.UserRepository;
+import com.example.chatApp.model.User;
+import com.example.chatApp.repository.UserRepository;
 import com.example.chatApp.dto.ChatResponse;
 import com.example.chatApp.dto.CreateChatRequest;
 import com.example.chatApp.dto.MessageResponse;

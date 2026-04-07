@@ -1,10 +1,11 @@
-package com.example.chatApp.media.service;
+package com.example.chatApp.service;
 
-import com.example.chatApp.auth.model.User;
-import com.example.chatApp.media.dto.NotificationPayload;
-import com.example.chatApp.media.model.Notification;
-import com.example.chatApp.media.model.Notification.NotificationType;
-import com.example.chatApp.media.repository.NotificationRepository;
+import com.example.chatApp.model.User;
+import com.example.chatApp.dto.NotificationPayload;
+import com.example.chatApp.model.Notification;
+import com.example.chatApp.model.Notification.NotificationType;
+import com.example.chatApp.repository.NotificationRepository;
+
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.springframework.data.domain.Page;

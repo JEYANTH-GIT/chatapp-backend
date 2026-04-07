@@ -1,9 +1,10 @@
-package com.example.chatApp.media.service;
+package com.example.chatApp.service;
 
-import com.example.chatApp.auth.model.User;
-import com.example.chatApp.media.dto.MediaUploadResponse;
-import com.example.chatApp.media.model.MediaFile;
-import com.example.chatApp.media.repository.MediaFileRepository;
+import com.example.chatApp.model.User;
+import com.example.chatApp.dto.MediaUploadResponse;
+import com.example.chatApp.model.MediaFile;
+import com.example.chatApp.repository.MediaFileRepository;
+
 import jakarta.annotation.PostConstruct;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Value;

@@ -1,6 +1,6 @@
 package com.example.chatApp.security;
 
-import com.example.chatApp.entity.User;
+import com.example.chatApp.model.User;
 import com.example.chatApp.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

@@ -1,9 +1,10 @@
-package com.example.chatApp.media.controller;
+package com.example.chatApp.controller;
 
-import com.example.chatApp.media.dto.NotificationPayload;
-import com.example.chatApp.media.dto.ReactionPayload;
-import com.example.chatApp.media.service.NotificationService;
-import com.example.chatApp.media.service.ReactionService;
+import com.example.chatApp.dto.NotificationPayload;
+import com.example.chatApp.dto.ReactionPayload;
+import com.example.chatApp.service.NotificationService;
+import com.example.chatApp.service.ReactionService;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;

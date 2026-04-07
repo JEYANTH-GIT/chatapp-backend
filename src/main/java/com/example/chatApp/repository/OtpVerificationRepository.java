@@ -1,7 +1,8 @@
 package com.example.chatApp.repository;
 
-import com.example.chatApp.entity.OtpVerification;
 import com.example.chatApp.enums.OtpPurpose;
+import com.example.chatApp.model.OtpVerification;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
