@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class AuthResponse {
 
+    private Long userId;
     private String token;
     private String refreshToken;
     private String username;

@@ -1,4 +1,4 @@
-package com.example.chatApp.entity;
+package com.example.chatApp.model;
 
 import com.example.chatApp.enums.OtpPurpose;
 import jakarta.persistence.*;

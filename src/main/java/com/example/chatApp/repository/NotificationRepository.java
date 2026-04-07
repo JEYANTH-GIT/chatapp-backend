@@ -1,6 +1,6 @@
-package com.example.chatApp.media.repository;
+package com.example.chatApp.repository;
 
-import com.example.chatApp.media.model.Notification;
+import com.example.chatApp.model.Notification;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -1,10 +1,10 @@
-package com.example.chatApp.media.service;
+package com.example.chatApp.service;
 
-import com.example.chatApp.auth.model.User;
-import com.example.chatApp.chat.model.Message;
-import com.example.chatApp.media.dto.ReactionPayload;
-import com.example.chatApp.media.model.MessageReaction;
-import com.example.chatApp.media.repository.MessageReactionRepository;
+import com.example.chatApp.model.User;
+import com.example.chatApp.model.Message;
+import com.example.chatApp.dto.ReactionPayload;
+import com.example.chatApp.model.MessageReaction;
+import com.example.chatApp.repository.MessageReactionRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.springframework.stereotype.Service;

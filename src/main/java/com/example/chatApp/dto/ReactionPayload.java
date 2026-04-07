@@ -1,4 +1,4 @@
-package com.example.chatApp.media.dto;
+package com.example.chatApp.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

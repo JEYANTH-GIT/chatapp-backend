@@ -1,6 +1,6 @@
-package com.example.chatApp.media.model;
+package com.example.chatApp.model;
 
-import com.example.chatApp.auth.model.User;
+import com.example.chatApp.model.User;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;

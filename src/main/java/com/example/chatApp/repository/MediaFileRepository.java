@@ -1,6 +1,6 @@
-package com.example.chatApp.media.repository;
+package com.example.chatApp.repository;
 
-import com.example.chatApp.media.model.MediaFile;
+import com.example.chatApp.model.MediaFile;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

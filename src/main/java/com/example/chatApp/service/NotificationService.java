@@ -1,10 +1,10 @@
-package com.example.chatApp.media.service;
+package com.example.chatApp.service;
 
-import com.example.chatApp.auth.model.User;
-import com.example.chatApp.media.dto.NotificationPayload;
-import com.example.chatApp.media.model.Notification;
-import com.example.chatApp.media.model.Notification.NotificationType;
-import com.example.chatApp.media.repository.NotificationRepository;
+import com.example.chatApp.model.User;
+import com.example.chatApp.dto.NotificationPayload;
+import com.example.chatApp.model.Notification;
+import com.example.chatApp.model.Notification.NotificationType;
+import com.example.chatApp.repository.NotificationRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.springframework.data.domain.Page;
@@ -91,6 +91,18 @@ public class NotificationService {
     @Transactional
     public int markAllAsRead(Long recipientId) {
         return notificationRepository.markAllAsRead(recipientId);
+    }
+
+    @Transactional
+    public void deleteNotification(Long notificationId, Long userId) {
+        Notification notification = notificationRepository.findById(notificationId)
+                .orElseThrow(() -> new RuntimeException("Notification not found with id: " + notificationId));
+
+        if (!notification.getRecipient().getId().equals(userId)) {
+            throw new RuntimeException("You are not authorized to delete this notification");
+        }
+
+        notificationRepository.delete(notification);
     }
 
     private String generateContent(NotificationType type, User actor) {

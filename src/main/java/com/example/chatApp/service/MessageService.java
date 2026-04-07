@@ -1,7 +1,7 @@
 package com.example.chatApp.service;
 
-import com.example.chatApp.auth.model.User;
-import com.example.chatApp.auth.repository.UserRepository;
+import com.example.chatApp.model.User;
+import com.example.chatApp.repository.UserRepository;
 import com.example.chatApp.dto.MessagePayload;
 import com.example.chatApp.dto.MessageResponse;
 import com.example.chatApp.model.Chat;
@@ -134,6 +134,45 @@ public class MessageService {
 
         message.setIsDeleted(true);
         messageRepository.save(message);
+    }
+
+    // ── Group Messages ──────────────────────────────────────────────────────
+
+    /**
+     * Saves a new group message.
+     */
+    public MessageResponse saveGroupMessage(MessagePayload payload) {
+        User sender = userRepository.findById(payload.getSenderId())
+            .orElseThrow(() -> new RuntimeException("Sender not found: " + payload.getSenderId()));
+
+        Message message = Message.builder()
+            .chat(null) // No 1-to-1 chat — this is a group message
+            .groupId(payload.getGroupId())
+            .sender(sender)
+            .content(payload.getContent())
+            .mediaId(payload.getMediaId())
+            .messageType(payload.getMessageType() != null ? payload.getMessageType() : Message.MessageType.TEXT)
+            .status(Message.MessageStatus.SENT)
+            .isDeleted(false)
+            .build();
+
+        Message saved = messageRepository.save(message);
+        return mapToMessageResponse(saved);
+    }
+
+    /**
+     * Get paginated message history for a group.
+     */
+    @Transactional(readOnly = true)
+    public List<MessageResponse> getGroupMessageHistory(Long groupId, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Message> messages = messageRepository
+            .findByGroupIdAndIsDeletedFalseOrderBySentAtAsc(groupId, pageable);
+
+        return messages.getContent()
+            .stream()
+            .map(this::mapToMessageResponse)
+            .collect(Collectors.toList());
     }
 
     // ── Mapper ───────────────────────────────────────────────────────────────

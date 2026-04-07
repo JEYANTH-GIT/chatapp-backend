@@ -1,4 +1,4 @@
-package com.example.chatApp.media.dto;
+package com.example.chatApp.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

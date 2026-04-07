@@ -1,42 +1,47 @@
-package com.example.chatApp.media.controller;
+package com.example.chatApp.controller;
 
-import com.example.chatApp.auth.model.User;
-import com.example.chatApp.media.dto.MediaUploadResponse;
-import com.example.chatApp.media.service.MediaService;
+import com.example.chatApp.model.User;
+import com.example.chatApp.dto.MediaUploadResponse;
+import com.example.chatApp.repository.UserRepository;
+import com.example.chatApp.service.MediaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/media")
 @Tag(name = "Media & Notifications", description = "File upload, download, and media management endpoints")
+@SecurityRequirement(name = "bearerAuth")
 public class MediaController {
 
     private final MediaService mediaService;
+    private final UserRepository userRepository;
 
-    @PersistenceContext
-    private EntityManager entityManager;
-
-    public MediaController(MediaService mediaService) {
+    public MediaController(MediaService mediaService, UserRepository userRepository) {
         this.mediaService = mediaService;
+        this.userRepository = userRepository;
     }
 
     @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(
             summary = "Upload a file",
-            description = "Upload a file or image. Supports all common file types up to 50MB."
+            description = "Upload a file or image. Supports all common file types up to 10MB."
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "File uploaded successfully",
@@ -48,19 +53,43 @@ public class MediaController {
     public ResponseEntity<?> uploadFile(
             @Parameter(description = "File to upload", required = true)
             @RequestParam("file") MultipartFile file,
-            @Parameter(description = "Uploader user ID", required = true)
-            @RequestParam("uploaderId") Long uploaderId) {
+            @AuthenticationPrincipal UserDetails userDetails) {
         try {
-            User uploader = entityManager.find(User.class, uploaderId);
-            if (uploader == null) {
-                return ResponseEntity.badRequest().body("User not found with id: " + uploaderId);
-            }
+            User uploader = resolveUser(userDetails);
             MediaUploadResponse response = mediaService.uploadFile(file, uploader);
             return ResponseEntity.ok(response);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body("Failed to upload file: " + e.getMessage());
+        }
+    }
+
+    @PostMapping(value = "/upload/multiple", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @Operation(
+            summary = "Upload multiple files",
+            description = "Upload multiple files at once. Supports all common file types up to 10MB each."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Files uploaded successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid files"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized")
+    })
+    public ResponseEntity<?> uploadMultipleFiles(
+            @Parameter(description = "Files to upload", required = true)
+            @RequestParam("files") List<MultipartFile> files,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        try {
+            User uploader = resolveUser(userDetails);
+            List<MediaUploadResponse> responses = new ArrayList<>();
+            for (MultipartFile file : files) {
+                responses.add(mediaService.uploadFile(file, uploader));
+            }
+            return ResponseEntity.ok(responses);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Failed to upload files: " + e.getMessage());
         }
     }
 
@@ -122,13 +151,21 @@ public class MediaController {
     public ResponseEntity<?> deleteMedia(
             @Parameter(description = "Media file ID", required = true)
             @PathVariable Long mediaId,
-            @Parameter(description = "User ID of requester", required = true)
-            @RequestParam("userId") Long userId) {
+            @AuthenticationPrincipal UserDetails userDetails) {
         try {
+            Long userId = resolveUser(userDetails).getId();
             mediaService.deleteMedia(mediaId, userId);
             return ResponseEntity.ok().body("File deleted successfully");
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
+    }
+
+    // ── Helper ────────────────────────────────────────────────────────────────
+
+    private User resolveUser(UserDetails userDetails) {
+        String email = userDetails.getUsername();
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Authenticated user not found: " + email));
     }
 }
