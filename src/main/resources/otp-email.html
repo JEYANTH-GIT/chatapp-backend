@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>LiveChat - OTP Verification</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, sans-serif; background-color: #0f0f23;">
+<table width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; margin: 40px auto; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); border-radius: 16px; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.5);">
+    <tr>
+        <td style="padding: 40px 30px; text-align: center; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+            <h1 style="color: #ffffff; margin: 0; font-size: 28px; letter-spacing: 2px;">💬 LiveChat</h1>
+            <p style="color: rgba(255,255,255,0.85); margin: 8px 0 0; font-size: 14px;">Secure Messaging Platform</p>
+        </td>
+    </tr>
+    <tr>
+        <td style="padding: 40px 30px;">
+            <h2 style="color: #e0e0ff; margin: 0 0 10px; font-size: 22px;">Email Verification</h2>
+            <p style="color: #a0a0c0; font-size: 15px; line-height: 1.6;">
+                Use the following OTP code to complete your <strong style="color: #667eea;" th:text="${purpose}">verification</strong>. This code is valid for <strong style="color: #667eea;">5 minutes</strong>.
+            </p>
+
+            <div style="text-align: center; margin: 30px 0;">
+                <div style="display: inline-block; padding: 20px 50px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; box-shadow: 0 8px 30px rgba(102, 126, 234, 0.4);">
+                    <span th:text="${otp}" style="font-size: 36px; font-weight: 700; color: #ffffff; letter-spacing: 12px;">123456</span>
+                </div>
+            </div>
+
+            <p style="color: #a0a0c0; font-size: 13px; line-height: 1.6;">
+                If you did not request this code, please ignore this email. Do not share this code with anyone.
+            </p>
+        </td>
+    </tr>
+    <tr>
+        <td style="padding: 20px 30px; text-align: center; border-top: 1px solid rgba(255,255,255,0.1);">
+            <p style="color: #606080; font-size: 12px; margin: 0;">
+                &copy; 2026 <span th:text="${appName}">LiveChat</span>. All rights reserved.
+            </p>
+        </td>
+    </tr>
+</table>
+</body>
+</html>
