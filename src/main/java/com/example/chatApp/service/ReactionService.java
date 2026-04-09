@@ -1,4 +1,5 @@
 package com.example.chatApp.service;
+<<<<<<< HEAD
 
 import com.example.chatApp.model.User;
 import com.example.chatApp.model.Message;
@@ -6,6 +7,14 @@ import com.example.chatApp.dto.ReactionPayload;
 import com.example.chatApp.model.MessageReaction;
 import com.example.chatApp.repository.MessageReactionRepository;
 
+=======
+
+import com.example.chatApp.model.User;
+import com.example.chatApp.model.Message;
+import com.example.chatApp.dto.ReactionPayload;
+import com.example.chatApp.model.MessageReaction;
+import com.example.chatApp.repository.MessageReactionRepository;
+>>>>>>> 336049e9327ef3bc762643b5dee206ef27479048
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.springframework.stereotype.Service;

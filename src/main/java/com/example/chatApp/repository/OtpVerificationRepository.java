@@ -1,5 +1,9 @@
 package com.example.chatApp.repository;
 
+<<<<<<< HEAD
+=======
+import com.example.chatApp.model.OtpVerification;
+>>>>>>> 336049e9327ef3bc762643b5dee206ef27479048
 import com.example.chatApp.enums.OtpPurpose;
 import com.example.chatApp.model.OtpVerification;
 

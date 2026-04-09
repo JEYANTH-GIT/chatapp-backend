@@ -1,5 +1,9 @@
 package com.example.chatApp.dto;
 
+<<<<<<< HEAD
+=======
+import com.example.chatApp.model.Notification.NotificationType;
+>>>>>>> 336049e9327ef3bc762643b5dee206ef27479048
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

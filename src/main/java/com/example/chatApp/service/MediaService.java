@@ -4,7 +4,6 @@ import com.example.chatApp.model.User;
 import com.example.chatApp.dto.MediaUploadResponse;
 import com.example.chatApp.model.MediaFile;
 import com.example.chatApp.repository.MediaFileRepository;
-
 import jakarta.annotation.PostConstruct;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Value;

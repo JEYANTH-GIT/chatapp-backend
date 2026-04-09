@@ -39,6 +39,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         String targetUrl = UriComponentsBuilder.fromUriString("http://localhost:5173/auth/callback")
                 .queryParam("token", authResponse.getToken())
                 .queryParam("refreshToken", authResponse.getRefreshToken())
+                .queryParam("userId", authResponse.getUserId())
                 .queryParam("username", authResponse.getUsername())
                 .queryParam("email", authResponse.getEmail())
                 .build().toUriString();

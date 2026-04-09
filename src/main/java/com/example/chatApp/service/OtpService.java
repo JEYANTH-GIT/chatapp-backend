@@ -1,6 +1,7 @@
 package com.example.chatApp.service;
 
-
+import com.example.chatApp.model.OtpVerification;
+import com.example.chatApp.model.User;
 import com.example.chatApp.enums.OtpPurpose;
 import com.example.chatApp.model.OtpVerification;
 import com.example.chatApp.model.User;

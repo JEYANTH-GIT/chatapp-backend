@@ -1,7 +1,11 @@
 package com.example.chatApp.service;
 
 import com.example.chatApp.dto.*;
+<<<<<<< HEAD
 
+=======
+import com.example.chatApp.model.User;
+>>>>>>> 336049e9327ef3bc762643b5dee206ef27479048
 import com.example.chatApp.enums.AuthProvider;
 import com.example.chatApp.enums.OtpPurpose;
 import com.example.chatApp.repository.UserRepository;
@@ -75,6 +79,7 @@ public class AuthService {
         otpService.generateAndSendOtp(user, OtpPurpose.REGISTRATION);
 
         return AuthResponse.builder()
+                .userId(user.getId())
                 .message("Registration successful. Please verify your email with the OTP sent.")
                 .email(user.getEmail())
                 .username(user.getUsername())
@@ -94,6 +99,7 @@ public class AuthService {
         if (!user.getIsVerified()) {
             otpService.generateAndSendOtp(user, OtpPurpose.REGISTRATION);
             return AuthResponse.builder()
+                    .userId(user.getId())
                     .message("Account not verified. OTP has been sent to your email.")
                     .email(user.getEmail())
                     .verified(false)
@@ -106,6 +112,7 @@ public class AuthService {
         log.info("User logged in successfully: {}", user.getEmail());
 
         return AuthResponse.builder()
+                .userId(user.getId())
                 .token(accessToken)
                 .refreshToken(refreshToken)
                 .username(user.getUsername())
@@ -125,9 +132,13 @@ public class AuthService {
             throw new RuntimeException("Invalid or expired refresh token");
         }
 
+        User user = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
         String newAccessToken = jwtUtil.generateToken(userDetails);
 
         return AuthResponse.builder()
+                .userId(user.getId())
                 .token(newAccessToken)
                 .refreshToken(refreshToken)
                 .message("Token refreshed successfully")
@@ -188,6 +199,7 @@ public class AuthService {
         log.info("OAuth2 user processed: {}", email);
 
         return AuthResponse.builder()
+                .userId(user.getId())
                 .token(accessToken)
                 .refreshToken(refreshToken)
                 .username(user.getUsername())

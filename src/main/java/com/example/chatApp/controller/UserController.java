@@ -3,7 +3,9 @@ package com.example.chatApp.controller;
 import com.example.chatApp.dto.ChatListItem;
 import com.example.chatApp.dto.GroupResponse;
 import com.example.chatApp.dto.UserSearchResult;
+import com.example.chatApp.model.User;
 import com.example.chatApp.model.UserStatus;
+import com.example.chatApp.repository.UserRepository;
 import com.example.chatApp.service.GroupService;
 import com.example.chatApp.service.SearchService;
 import com.example.chatApp.service.UserStatusService;
@@ -11,8 +13,11 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,16 +26,20 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/users")
 @Tag(name = "Groups & Users", description = "Group management and user operations")
+@SecurityRequirement(name = "bearerAuth")
 public class UserController {
 
     private final SearchService searchService;
     private final UserStatusService userStatusService;
     private final GroupService groupService;
+    private final UserRepository userRepository;
 
-    public UserController(SearchService searchService, UserStatusService userStatusService, GroupService groupService) {
+    public UserController(SearchService searchService, UserStatusService userStatusService,
+                          GroupService groupService, UserRepository userRepository) {
         this.searchService = searchService;
         this.userStatusService = userStatusService;
         this.groupService = groupService;
+        this.userRepository = userRepository;
     }
 
     @GetMapping("/search")
@@ -61,7 +70,8 @@ public class UserController {
             @ApiResponse(responseCode = "200", description = "Chat list retrieved")
     })
     public ResponseEntity<List<ChatListItem>> getChatList(
-            @RequestHeader(value = "X-User-Id", defaultValue = "1") @Parameter(description = "Authenticated user ID") Long userId) {
+            @AuthenticationPrincipal UserDetails userDetails) {
+        Long userId = resolveUserId(userDetails);
 
         List<GroupResponse> userGroups = groupService.getGroupsForUser(userId);
 
@@ -79,5 +89,14 @@ public class UserController {
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok(chatList);
+    }
+
+    // ── Helper ────────────────────────────────────────────────────────────────
+
+    private Long resolveUserId(UserDetails userDetails) {
+        String email = userDetails.getUsername();
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Authenticated user not found: " + email));
+        return user.getId();
     }
 }

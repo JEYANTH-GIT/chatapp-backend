@@ -4,6 +4,8 @@ import com.example.chatApp.dto.ChatResponse;
 import com.example.chatApp.dto.CreateChatRequest;
 import com.example.chatApp.dto.MessageResponse;
 import com.example.chatApp.model.Message;
+import com.example.chatApp.model.User;
+import com.example.chatApp.repository.UserRepository;
 import com.example.chatApp.service.ChatService;
 import com.example.chatApp.service.MessageService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -22,9 +24,7 @@ import java.util.List;
 
 /**
  * REST Controller for 1-to-1 Chat operations.
- * Owner: Mahalakshmi (Module 2)
  * Base path: /api/chats
- * Swagger Tag: "Chat & Messaging"
  */
 @RestController
 @RequestMapping("/api/chats")
@@ -34,10 +34,13 @@ public class ChatController {
 
     private final ChatService chatService;
     private final MessageService messageService;
+    private final UserRepository userRepository;
 
-    public ChatController(ChatService chatService, MessageService messageService) {
+    public ChatController(ChatService chatService, MessageService messageService,
+                          UserRepository userRepository) {
         this.chatService = chatService;
         this.messageService = messageService;
+        this.userRepository = userRepository;
     }
 
     // ── POST /api/chats ───────────────────────────────────────────────────────
@@ -56,9 +59,27 @@ public class ChatController {
     public ResponseEntity<ChatResponse> createOrGetChat(
             @AuthenticationPrincipal UserDetails userDetails,
             @Valid @RequestBody CreateChatRequest request) {
-        Long currentUserId = extractUserId(userDetails);
+        Long currentUserId = resolveUserId(userDetails);
         ChatResponse response = chatService.getOrCreateChat(currentUserId, request);
         return ResponseEntity.ok(response);
+    }
+
+    // ── GET /api/chats/user ──────────────────────────────────────────────────
+
+    @Operation(
+        summary = "Get all chats for the authenticated user",
+        description = "Returns all 1-to-1 chats for the sidebar chat list."
+    )
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Chat list retrieved"),
+        @ApiResponse(responseCode = "401", description = "Unauthorized")
+    })
+    @GetMapping("/user")
+    public ResponseEntity<List<ChatResponse>> getAllChatsForUser(
+            @AuthenticationPrincipal UserDetails userDetails) {
+        Long currentUserId = resolveUserId(userDetails);
+        List<ChatResponse> chats = chatService.getAllChatsForUser(currentUserId);
+        return ResponseEntity.ok(chats);
     }
 
     // ── GET /api/chats/{chatId} ───────────────────────────────────────────────
@@ -76,7 +97,7 @@ public class ChatController {
     public ResponseEntity<ChatResponse> getChatById(
             @PathVariable Long chatId,
             @AuthenticationPrincipal UserDetails userDetails) {
-        Long currentUserId = extractUserId(userDetails);
+        Long currentUserId = resolveUserId(userDetails);
         ChatResponse response = chatService.getChatById(chatId, currentUserId);
         return ResponseEntity.ok(response);
     }
@@ -105,14 +126,8 @@ public class ChatController {
 
     @Operation(
         summary = "Update message status",
-        description = "Mark a message as DELIVERED or SEEN. Also triggers bulk-seen for entire chat."
+        description = "Mark a message as DELIVERED or SEEN."
     )
-    @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "Status updated"),
-        @ApiResponse(responseCode = "400", description = "Invalid status value"),
-        @ApiResponse(responseCode = "401", description = "Unauthorized"),
-        @ApiResponse(responseCode = "404", description = "Message not found")
-    })
     @PutMapping("/messages/{messageId}/status")
     public ResponseEntity<MessageResponse> updateMessageStatus(
             @PathVariable Long messageId,
@@ -126,19 +141,13 @@ public class ChatController {
 
     @Operation(
         summary = "Soft-delete a message",
-        description = "Marks the message as deleted. Only the original sender can delete their message."
+        description = "Marks the message as deleted. Only the original sender can delete."
     )
-    @ApiResponses({
-        @ApiResponse(responseCode = "204", description = "Message deleted successfully"),
-        @ApiResponse(responseCode = "401", description = "Unauthorized"),
-        @ApiResponse(responseCode = "403", description = "Forbidden — not the message sender"),
-        @ApiResponse(responseCode = "404", description = "Message not found")
-    })
     @DeleteMapping("/messages/{messageId}")
     public ResponseEntity<Void> deleteMessage(
             @PathVariable Long messageId,
             @AuthenticationPrincipal UserDetails userDetails) {
-        Long currentUserId = extractUserId(userDetails);
+        Long currentUserId = resolveUserId(userDetails);
         messageService.softDeleteMessage(messageId, currentUserId);
         return ResponseEntity.noContent().build();
     }
@@ -146,10 +155,13 @@ public class ChatController {
     // ── Helper ────────────────────────────────────────────────────────────────
 
     /**
-     * Extracts the user ID from the UserDetails principal.
-     * Works with Karthik's CustomUserDetailsService which sets username as the user ID string.
+     * Resolves the user ID from the JWT principal.
+     * CustomUserDetailsService sets username = email, so we look up by email.
      */
-    private Long extractUserId(UserDetails userDetails) {
-        return Long.parseLong(userDetails.getUsername());
+    private Long resolveUserId(UserDetails userDetails) {
+        String email = userDetails.getUsername();
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Authenticated user not found: " + email));
+        return user.getId();
     }
 }

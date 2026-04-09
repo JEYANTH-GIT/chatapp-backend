@@ -77,6 +77,19 @@ public class JwtUtil {
                 .compact();
     }
 
+    /**
+     * Validates a token without requiring UserDetails.
+     * Returns true if the token can be parsed and is not expired.
+     */
+    public boolean validateToken(String token) {
+        try {
+            extractAllClaims(token);
+            return !isTokenExpired(token);
+        } catch (JwtException | IllegalArgumentException e) {
+            return false;
+        }
+    }
+
     public Boolean isTokenValid(String token, UserDetails userDetails) {
         final String username = extractUsername(token);
         return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);
